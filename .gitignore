@@ -1,0 +1,19 @@
+.venv/
+.runtime/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+.DS_Store
+._*
+data/
+assets/
+checkpoints/
+wandb/
+outputs/
+build/
+dist/
+
+# Project page assets (served from docs/ by GitHub Pages)
+!docs/assets/

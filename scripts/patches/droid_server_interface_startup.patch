@@ -1,0 +1,36 @@
+diff --git a/droid/misc/server_interface.py b/droid/misc/server_interface.py
+index d13152e..da0ab45 100644
+--- a/droid/misc/server_interface.py
++++ b/droid/misc/server_interface.py
+@@ -0,0 +1 @@
++import socket
+@@ -6,0 +8,8 @@ import zerorpc
++def port_is_reachable(host, port, timeout=1.0):
++    try:
++        with socket.create_connection((host, port), timeout=timeout):
++            return True
++    except OSError:
++        return False
++
++
+@@ -29,2 +38,13 @@ class ServerInterface:
+-            func_list = [self.launch_controller, self.launch_robot]
+-            attempt_n_times(func_list, max_attempts=2)
++            # Reuse an already-running arm client instead of killing and
++            # relaunching the real-time controller every time RobotEnv starts.
++            # Do not probe get_robot_state when the Polymetis arm server is
++            # absent: its gRPC call can block the single NUC RPC server.
++            if not port_is_reachable(self.ip_address, 50051):
++                func_list = [self.launch_controller, self.launch_robot]
++                attempt_n_times(func_list, max_attempts=2)
++            else:
++                try:
++                    self.server.get_robot_state()
++                except zerorpc.exceptions.RemoteError:
++                    func_list = [self.launch_controller, self.launch_robot]
++                    attempt_n_times(func_list, max_attempts=2)
+@@ -33 +53,3 @@ class ServerInterface:
+-        self.server = zerorpc.Client(heartbeat=20)
++        # Starting the Franka client can take longer than zerorpc's 30-second
++        # default even though it eventually registers successfully.
++        self.server = zerorpc.Client(timeout=120, heartbeat=20)

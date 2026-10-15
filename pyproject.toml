@@ -1,0 +1,98 @@
+[project]
+name = "foveavla"
+version = "0.1.0"
+description = "FoveaVLA data preparation, training, and real-robot deployment"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { file = "LICENSE" }
+dependencies = [
+    "augmax>=0.3.4",
+    "beartype==0.19.0",
+    "chex==0.1.90",
+    "einops==0.8.1",
+    "etils[epath]>=1.9",
+    "filelock>=3.16.1",
+    "flax==0.10.2",
+    "fsspec[gcs]>=2024.6.0",
+    "h5py>=3.12",
+    "huggingface-hub>=0.32.3,<1.0",
+    "ijson>=3.4",
+    "imageio==2.37.2",
+    "jax[cuda12]==0.5.3; sys_platform == 'linux'",
+    "jax==0.5.3; sys_platform != 'linux'",
+    "jaxtyping==0.2.36",
+    "lmdb>=1.7.3",
+    "numpy>=1.26,<2.0.0",
+    "numpydantic>=1.6.6",
+    "opencv-python-headless==4.11.0.86",
+    "omegaconf==2.3.0",
+    "foveavla-client",
+    "optax>=0.2.3",
+    "orbax-checkpoint==0.11.13",
+    "pillow>=11.0.0",
+    "pyarrow>=17",
+    "pyyaml>=6.0",
+    "rich>=14.0.0",
+    "sentencepiece>=0.2.0",
+    "torch==2.7.1",
+    "torchvision==0.22.1",
+    "timm==1.0.19",
+    "tqdm>=4.66",
+    "tqdm-loggable>=0.2",
+    "treescope>=0.1.7",
+    "typing-extensions>=4.12.2",
+    "tyro>=0.9.5",
+    "wandb==0.22.3",
+]
+
+[project.scripts]
+droid-foveation-annotate = "droid_foveation.annotate:main"
+droid-foveal-repack-direct = "droid_foveation.repack_direct:main"
+# Compatibility aliases for released data-preparation commands.
+droid-roi-annotate = "droid_foveation.annotate:main"
+droid-roi-repack-direct = "droid_foveation.repack_direct:main"
+
+[project.urls]
+Repository = "https://github.com/Stanford-TML/FoveaVLA"
+
+[dependency-groups]
+rlds = [
+    "dlimp",
+    "tensorflow==2.15.0; sys_platform == 'linux'",
+    "tensorflow-datasets==4.9.9",
+    "tensorflow-metadata==1.17.1",
+]
+
+[tool.uv]
+# dlimp pins TensorFlow 2.15, while JAX 0.5 requires newer ml-dtypes.
+# Keep the tested CPU-only RLDS combination; TensorFlow's metadata check reports this override.
+override-dependencies = ["ml-dtypes==0.4.1", "tensorstore==0.1.74"]
+
+[tool.uv.sources]
+foveavla-client = { workspace = true }
+dlimp = { git = "https://github.com/kvablack/dlimp", rev = "ad72ce3a9b414db2185bc0b38461d4101a65477a" }
+torch = [{ index = "pytorch-cu128", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" }]
+torchvision = [{ index = "pytorch-cu128", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.workspace]
+members = ["packages/foveavla-client"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/foveavla", "src/droid_foveation", "src/droid_interactive_roi"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = ["F722"]  # jaxtyping shape strings are not Python forward references.

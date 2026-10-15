@@ -1,0 +1,10 @@
+FoveaVLA includes code derived from Physical Intelligence's OpenPI project
+(https://github.com/Physical-Intelligence/openpi), distributed under Apache-2.0.
+OpenPI model components include implementations adapted from Google Research's
+big_vision project; their copyright notices are retained in the source files.
+
+FoveaVLA foveal RGB/depth and deployment source was prepared from the authors' OpenPI
+fork at commit bc68107 and the droid_interactive_roi data-processing repository.
+
+Gemma-related notices are retained in LICENSE_GEMMA.txt. Fast-FoundationStereo,
+DROID software, pretrained weights, and datasets are downloaded separately.

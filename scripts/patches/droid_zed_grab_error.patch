@@ -1,0 +1,11 @@
+--- a/droid/camera_utils/camera_readers/zed_camera.py
++++ b/droid/camera_utils/camera_readers/zed_camera.py
+@@ -180,7 +180,7 @@
+         timestamp_dict = {self.serial_number + "_read_start": time_ms()}
+         err = self._cam.grab(self._runtime)
+         if err != sl.ERROR_CODE.SUCCESS:
+-            return None
++            raise RuntimeError(f"ZED camera {self.serial_number} grab failed: {err}; abort rollout and reopen cameras")
+         timestamp_dict[self.serial_number + "_read_end"] = time_ms()
+ 
+         # Benchmark Latency #

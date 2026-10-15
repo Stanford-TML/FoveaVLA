@@ -1,0 +1,47 @@
+version: "1.0.0"
+
+# RoboInter exposes one manipulated-object/tool component and one
+# destination/interaction-target component.  The names here retain the source
+# terminology; conceptually they correspond to subject_or_tool and target in
+# the interaction-box definition in the paper.
+roles:
+  gripper: gripper_box
+  object: object_box
+  placement: placement_proposal
+
+primitives:
+  # Direct contact with a subject; no separate visual target is required.
+  pick:
+    required_roles: [gripper, object]
+  push:
+    required_roles: [gripper, object]
+  pull:
+    required_roles: [gripper, object]
+  press:
+    required_roles: [gripper, object]
+  twist:
+    required_roles: [gripper, object]
+
+  # Goal-directed or tool-target interaction; retain the target component.
+  transfer:
+    required_roles: [gripper, object, placement]
+  place:
+    required_roles: [gripper, object, placement]
+  slide:
+    required_roles: [gripper, object, placement]
+  fold:
+    required_roles: [gripper, object, placement]
+  pour:
+    required_roles: [gripper, object, placement]
+  insert:
+    required_roles: [gripper, object, placement]
+  throw:
+    required_roles: [gripper, object, placement]
+  manipulate:
+    required_roles: [gripper, object, placement]
+  shake:
+    required_roles: [gripper, object, placement]
+  strike:
+    required_roles: [gripper, object, placement]
+
+unsupported_primitive: invalid

@@ -1,0 +1,24 @@
+[project]
+name = "foveavla-client"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "msgpack>=1.0.5",
+    "numpy>=1.22.4,<2.0.0",
+    "opencv-contrib-python==4.6.0.66; python_version < '3.11'",
+    "opencv-python-headless==4.11.0.86; python_version >= '3.11'",
+    "pillow>=9.0.0",
+    "typing-extensions>=4.12.2",
+    "websockets>=14.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
